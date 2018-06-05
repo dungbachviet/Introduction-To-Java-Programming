@@ -170,7 +170,50 @@
     - Trong lệnh này : ta có khai báo thêm kiểu <T>, rồi tiếp tục khai báo quan hệ <? super T> nhằm ám chỉ rằng : khi T được gán tại thời gian runtime, thì ? sẽ là bất kỳ kiểu lớp cha nào của T. Nên GenericStack<? super T> sẽ là : GenericStack<T> hoặc là GenericStack<Lớp_Cha_Của_T>,...
   - Ký hiệu <? extends T> : Ngược lại ý nghĩa của <? super T>. Ví dụ public static <T> void add(GenericStack<? extends T> stack1, GenericStack<T> stack2) == (giống với lệnh) public static <T> void add(GenericStack<T> stack1, GenericStack<? super T> stack2). Do vậy, GenericStack<? extends T> sẽ được hiểu là : Ta có truyền vào bất kỳ đối tượng thuộc kiểu sau : GenericStack<T> hoặc GenericStack<Lớp_Con_Của_T>.
 	
+## CHƯƠNG 20 : (tr 762) - Trình bày các Collection của Java như List, Stack, Queue, Priority Queue
 	
+	
+	
+## CHƯƠNG 32 : (tr1174) JAVA DATABASE PROGRAMMING
+- Mục 32.1, 32.2 (tr1174) 
+  - Trình bày tổng quan quá trình sử dụng Cơ sở dữ liệu : Đi từ Người dùng --> Chương trình Ứng dụng--> Hệ thống quản lý CSDL --> Kho CSDL
+  - Giới thiệu mô hình CSDL Quan hệ : Một bảng với nhiều thuộc tính, trong đó Bảng được hiểu là một lớp thực thể (như Nhân_Viên, Học_Sinh,...), các thuộc tính được hiểu là các đặc điểm/tính chất gắn với mỗi thực thể trong lớp thực thể (ví dụ : với lớp thực thể là Học Sinh thì các thuộc tính của học sinh có thể là Tên, Tuổi, Quê quán, Giới tính ...). Mỗi bảng có thể chứa nhiều bản ghi (ví dụ : Bảng Học_Sinh thì có học sinh A, học sinh B,...)
+  - Trình bày 3 ràng buộc chính giữa các bảng (các quan hệ, thực thể) trong hệ CSDL, đó là : 
+    - Ràng buộc về Khóa chính : Mỗi bảng thực thể cần phải chỉ ra tập các thuộc tính đóng vai trò làm khóa chính, mà từ khóa chính này (tập các thuộc tính then chốt này) ta có thể phân biệt được các bản ghi với nhau trong bảng đó. Hiển nhiên với một bảng ta có thể đề xuất nhiều khóa chính, nhưng hãy chọn ra tập các thuộc tính nhỏ nhất và then chốt nhất để làm khóa chính.
+	- Ràng buộc về Khóa ngoại : Khi ta đã quan niệm khóa chính hiểu như một ID giúp phân biệt được giữa các bản ghi với nhau trong cùng một Bảng. Vậy thì lúc này, nếu có 2 bảng có quan hệ với nhau như quan hệ cha-con chẳng hạn (cha có thể có nhiều con). Lúc này, với mỗi người con ta cần phải có một sự "truy dẫn" để tìm được về với cha của người con đó. Giả sử : ta có bảng Cha, và có bảng Sinh_Viên, với mỗi bảng đều có một khóa chính riêng. Lúc này, ta bổ sung thêm tập các thuộc tính đang đóng vai trò làm khóa chính của bảng Cha vào tập các thuộc tính của bảng Sinh_Viên. Lúc này, ta gọi : tập các thuộc tính như vậy là : Khóa ngoài của bảng Sinh_Viên tham chiếu tới khóa chính của bảng Cha. Như vậy, với một sinh viên A, ta chỉ cần dựa vào các trường khóa ngoại rồi đem đi tìm trong bảng Cha thì sẽ tìm ra được cha của sinh viên A đó.
+	- Ràng buộc về Miền : chẳng hạn ràng buộc về NULL, Unique(phân biệt), Giới hạn miền, ...
+
+- Mục 32.3 (tr1178) Trình bày về các câu truy vấn trong SQL
+  - Cách tạo tài khoản User trên MySQL
+  - Cách cấp quyền
+  - Cách tạo mới Database
+  - Cách tạo mới/Xóa bảng
+  - Các lệnh update bảng cơ bản như : Chèn, Sửa, Xóa bản ghi
+  - Các lệnh truy vấn bản ghi từ bảng
+  - Cách sử dụng các toán tử So sánh, Boolean trong câu truy vấn 
+  - Cách sử dụng các toán tử So khớp xâu (like), miền giá trị (between), toán tử kiểm tra null (is null)
+  - Cách đặt tên giả cho cột
+  - Sử dụng các toán tử toán học trong câu truy vấn (cộng, trừ, nhân, chia..)
+  - Cách sử dụng Distinct để hiển thị các bản ghi phân biệt
+  - Cách hiển thị các bản ghi đã được sắp xếp theo một thứ tự nào đó.
+  - Cách join nhiều bảng với nhau để truy vấn (nếu tìm hiểu kỹ thì sẽ có join trong, join trái, join phải, join theo kiểu đề-các)
+  
+- Mục 32.4 (tr1189) : Tác giả trình bày cách sử dụng thư viện JDBC để truy vấn tới CSDL (Database)
+  - 32.4.1 : Tác giả nêu tổng quan của quá trình thao tác với CSDL sử dụng JDBC như sau : 
+    - Bước 1 : Khai báo sử dụng Driver (Loading Driver) bằng lệnh Class.forName("Tên_Class_Của_Driver_Sử_Dụng"). Đối với từng hệ quản trị cơ sở dữ liệu khác nhau (MySQL, SQL Server,..) thì sẽ phải phải gọi tới các Driver khác nhau (đã được liệt kê trong bảng 32.3-tr1191). Ta hiểu Driver giống như một công cụ giúp thao tác được với Hệ quản trị CSDL
+	- Bước 2 : Thiết lập kết nối tới Database như sau : Connection connection = DriverManager.getConnection(databaseURL); trong đó databaseURL đã được tác giả liệt kê trong bảng (tương ứng với từng Hệ quản trị CSDL)
+	- Bước 3 : Tạo ra một đối tượng chứa và thực hiện lệnh SQL : Statement statement = connection.createStatement();
+	- Bước 4 : Thực hiện lệnh : 
+	  - Thực hiện update bảng : statement.executeUpdate("lệnh SQL để update bảng");
+	  - Thực hiện truy vấn để trả kết quả về : ResultSet resultSet = statement.executeQuery("lệnh truy vấn SQL"); sau khi thực thi nó sẽ trả kết quả truy vấn được cho đối tượng resultSet
+	- Bước 5 : Xử lý kết quả truy vấn trả về : Sau khi đã lấy được dữ liệu từ database trả về trong biến resultSet, ta tiến hành lấy từng trường dữ liệu trong từng bản ghi trong resultSet để xử lý trong ứng dụng (xem các tác giả demo)
+	
+  - 32.4.2 : Tác giả nêu một ví dụ trực quan và cụ thể khi sử dụng 5 bước thao tác với CSDL trên trong Java FX (giao diện đồ họa của Java)
+ 
+- Mục 32.5 : Tác giả giới thiệu về kiểu dữ liệu PreparedStatement. Khác với kiểu Statement, thì kiểu PreparedStatement linh hoạt hơn rất nhiều, nó cho phép trong câu truy vấn còn các ký hiệu ? để sau đó ta có thể điền vào sau nhờ các phương thức set tương ứng. Với cách này sẽ khiến cho câu truy vấn được linh hoạt và có thể được tái sử dụng nhiều lần !!!
+
+- Mục 32.6 : Giới thiệu về CallableStatement - Phải hiểu được Thủ tục trong SQL thì nên đọc phần này.
+- Mục 32.7 : Trình bày cách lấy các thông tin Metadata (thông tin khác của database như username,URL, Driver name,...) 
 	
 
 	
