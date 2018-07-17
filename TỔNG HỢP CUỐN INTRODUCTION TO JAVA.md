@@ -171,8 +171,39 @@
   - Ký hiệu <? extends T> : Ngược lại ý nghĩa của <? super T>. Ví dụ public static <T> void add(GenericStack<? extends T> stack1, GenericStack<T> stack2) == (giống với lệnh) public static <T> void add(GenericStack<T> stack1, GenericStack<? super T> stack2). Do vậy, GenericStack<? extends T> sẽ được hiểu là : Ta có truyền vào bất kỳ đối tượng thuộc kiểu sau : GenericStack<T> hoặc GenericStack<Lớp_Con_Của_T>.
 	
 ## CHƯƠNG 20 : (tr 762) - Trình bày các Collection của Java như List, Stack, Queue, Priority Queue
-	
-	
+
+
+
+## Chapter 30 - Multithreading and Parallel Programming - Lập trình đa luồng (song song)
+
+30.1. Introduction
+30.2. Thread Concepts (1098) : Giới thiệu về mô hình lập trình đa luồng (lợi ích về mặt thời gian và tận dụng tài nguyên của CPU,...)
+30.3. Creating Tasks and Threads (1098) : Hướng dẫn cách tạo mô hình lập trình đa luồng với các khái niệm Task, Thread
+  - Định nghĩa 1 class nhằm hiện một công việc nào đó. Để class này có thể được thực hiện bởi một luồng nào đó thì ta cần phải cho class đó implement interface Runnable. Runnable là interface chỉ có 1 phương thức ảo run(), class của ta cần phải override phương thức ảo này. Vậy bên trong run() (được override bên trong class) dùng để làm gì? Ta sẽ định nghĩa một công việc bên trong phương thức này (giống như định nghĩa một phương thức vậy, nhưng chẳng qua tên của phương thức này là run() thôi). Như vậy 1 task đã định nghĩa.
+  - Tiếp theo, làm sao để cho 1 luồng (từ 1 processor nào) thực hiện task này? Tại hàm main (chương trình chính), ta thực hiện tạo đối tượng chứa task cần thực hiện. Sau đó, tạo ra một đối tượng luồng với tham số là đối tượng task cần thực hiện trên. Từ đối tượng luồng đó, ta gọi tới phương thức start() của nó (nghĩa là cho luồng bắt đầu chạy và thực hiện task đó). Về bản chất bên trong, khi một luồng (thread) gọi tới phương thức start() của nó thì JVM sẽ tự động gọi tới phương thức run() bên trong Task (mà ta đã định nghĩa). Chú ý rằng : Ta không được sử dụng đối tượng Task để gọi tới trực tiếp phương thức run() của nó mà buộc phải cần tới 1 luồng để gọi tới start() (rồi run() sẽ được gọi tự động), nếu cố tình gọi trực tiếp thì chương trình sẽ không tạo luồng mới (tức chẳng có luồng mới nào thực hiện cả)!!!
+
+30.4. The Thread Class (1102) : Trình bày cụ thể về lớp Thread 
+  - Class Thread implement interface Runnable
+  - Chứa các phương thức : start (bắt đầu chạy thread trên task được truyền vào), isAlive(kiểm tra luồng có đang chạy không), setPriority (thiết lập độ ưu tiên cho luồng), join() (chờ đợi 1 luồng khác thực hiện xong thì mới được thực hiện tiếp), sleep (cho phép luồng được ngủ trong bao nhiều miliseconds), yield (nhường cho các luồng khác thực hiện trước), interrupt(để ngắt luồng này).
+  - Chú ý : Không nên sử dụng các phương thức stop(), suspend(), resume() (vì nó đã cũ, không sử dụng). Để ngừng 1 luồng, đơn giản ta chỉ cần gán biến đó bằng null.
+  - Hướng dẫn cách sử dụng sleep() để thiết lập thời gian ngủ cho luồng (với checked exception)
+  - Cách sử dụng join() để luồng A khi thực hiện tới 1 thời điểm nào đó thì phải chờ luồng B phải thực hiện xong thì luồng A mới được thực hiện tiếp.
+  - Cách thiết lập mức độ ưu tiên cho các luồng bằng setPriority() với 3 tham số : MIN_PRIORITY, NORM_PRIORITY, MAX_PRIORITY (tương ứng với 3 mức độ ưu tiên nhỏ nhất, trung bình, lớn nhất tương ứng với 1, 5, 10). Mặc định, mỗi luồng có độ ưu tiên bằng 5 (tức NORM_PRIORITY) (ta có thiết lập giá trị cụ thể cho độ ưu tiên từ 1-->10)
+
+30.5. Case Study : Flashing Text - Trình bày về 1 ví dụ hiển thị chữ động (nhấp nháy sử dụng luồng)
+
+30.6. Thread Pools (1106) : Trình bày cách sử dụng Pool (bể) để chứa nhiều luồng. Pool sẽ quản lý tất cả các luồng như : tái sử dụng 1 luồng để thực hiện 1 task khác, tự động tạo thêm luồng mới khi có task mới đến, ... Việc sử dụng Pool sẽ rất linh hoạt trong việc quản lý luồng hơn là cứ mỗi task tạo ra 1 luồng để chạy (như tác giả đã trình bày ở mục trước)
+
+  - Tạo ra đối tượng ExecutorService để quản lý và chứa các luồng bằng cách sau : (gọi tới phương thức static của class Executors để nó trả về 1 đối tượng ExecutorService chuyên quản lý các luồng) Executors.newFixedThreadPool(số_luồng_fix_cứng) hoặc Executors.newCachedThreadPool() (để tạo số luồng một cách động và linh hoạt, tức cứ khi có luồng mới thì nó tạo, nếu luồng đó không cần thiết nữa thì ta sẽ xóa nó đi)
+  - Sử dụng newCachedThreadPool linh hoạt hơn newFixedThreadPool
+  
+30.7. Thread Synchronization - Đồng bộ các luồng
+  - Trình bày 1 trường hợp 100 luồng cùng thực hiện đọc và ghi lên tài khoản như sau : Chẳng hạn, ta có 100 luồng, mỗi luồng sẽ lấy số dư của 1 tài khoản A rồi cộng cho tài khoản A 1 dollar. Như vậy, với 100 luồng thì rõ ràng, tài khoản A phải được cộng thêm 100 dollar. Nhưng kết quả chạy lại không cho kết quả như vậy? Nguyên nhân như sau: Tại thời điểm 1, luồng 1 đang đọc số dư tài khoản hiện tại balance. Tại thời điểm 2, luồng 2 đọc số dư tài khoản hiện tại balance. Thời điểm 3, luồng 1 lấy balance đã nhận được rồi cộng thêm 1 và cập nhật số dư. Thời điểm 4, luồng 2 lấy số dư nó đã lấy được từ thời điểm 2 để cộng thêm 1 dollar rồi cập nhật. Như vậy, luồng 2 không hề tận dụng kết quả cập nhật của luồng 1, do vậy dẫn đến kết quả bị sai lệch (luồng 2 ghi đè lên kết quả của luồng 1).
+  - Nguyên nhân của vấn đề này, đó là : 2 thao tác đọc số dư và cập nhật tài khoản bị thực hiện riêng rẽ. Để tránh hiện tượng này, ta cần phải đóng gói 2 thao tác trên vào cùng 1 wrapper và chỉ cho phép 1 luồng được chạy trong khối wrapper tại 1 thời điểm
+  - Sử dụng từ khóa synchronized đặt trước phương thức truy cập tài nguyên dùng chung này
+  
+  - ... Sau này khi cần đồng bộ thì đọc thêm
+  	
 	
 ## CHƯƠNG 32 : (tr1174) JAVA DATABASE PROGRAMMING
 - Mục 32.1, 32.2 (tr1174) 
