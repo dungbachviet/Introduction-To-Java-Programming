@@ -177,7 +177,9 @@
 ## Chapter 30 - Multithreading and Parallel Programming - Lập trình đa luồng (song song)
 
 30.1. Introduction
+
 30.2. Thread Concepts (1098) : Giới thiệu về mô hình lập trình đa luồng (lợi ích về mặt thời gian và tận dụng tài nguyên của CPU,...)
+
 30.3. Creating Tasks and Threads (1098) : Hướng dẫn cách tạo mô hình lập trình đa luồng với các khái niệm Task, Thread
   - Định nghĩa 1 class nhằm hiện một công việc nào đó. Để class này có thể được thực hiện bởi một luồng nào đó thì ta cần phải cho class đó implement interface Runnable. Runnable là interface chỉ có 1 phương thức ảo run(), class của ta cần phải override phương thức ảo này. Vậy bên trong run() (được override bên trong class) dùng để làm gì? Ta sẽ định nghĩa một công việc bên trong phương thức này (giống như định nghĩa một phương thức vậy, nhưng chẳng qua tên của phương thức này là run() thôi). Như vậy 1 task đã định nghĩa.
   - Tiếp theo, làm sao để cho 1 luồng (từ 1 processor nào) thực hiện task này? Tại hàm main (chương trình chính), ta thực hiện tạo đối tượng chứa task cần thực hiện. Sau đó, tạo ra một đối tượng luồng với tham số là đối tượng task cần thực hiện trên. Từ đối tượng luồng đó, ta gọi tới phương thức start() của nó (nghĩa là cho luồng bắt đầu chạy và thực hiện task đó). Về bản chất bên trong, khi một luồng (thread) gọi tới phương thức start() của nó thì JVM sẽ tự động gọi tới phương thức run() bên trong Task (mà ta đã định nghĩa). Chú ý rằng : Ta không được sử dụng đối tượng Task để gọi tới trực tiếp phương thức run() của nó mà buộc phải cần tới 1 luồng để gọi tới start() (rồi run() sẽ được gọi tự động), nếu cố tình gọi trực tiếp thì chương trình sẽ không tạo luồng mới (tức chẳng có luồng mới nào thực hiện cả)!!!
